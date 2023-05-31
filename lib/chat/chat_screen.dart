@@ -8,6 +8,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,13 +22,46 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: 6,
-        itemBuilder: (context, index) {
-          return Card(
-            child: Text('Hello'),
-          );
-        },
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: 6,
+                itemBuilder: (context, index) {
+                  return Card(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Hello'),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      minLines: 1,
+                      maxLines: 5,
+                      controller: _controller,
+                      decoration: InputDecoration(
+                        hintText: 'Message',
+                        filled: true,
+                        fillColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                      ),
+                    ),
+                  ),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.send))
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
