@@ -10,6 +10,24 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Language Partner'),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: 6,
+        itemBuilder: (context, index) {
+          return Card(
+            child: Text('Hello'),
+          );
+        },
+      ),
+    );
   }
 }
