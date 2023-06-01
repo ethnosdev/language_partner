@@ -78,7 +78,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     onPressed: () async {
                       manager.send(_controller.text);
                       _controller.clear();
-                      await Future.delayed(const Duration(milliseconds: 0));
+                      await Future.delayed(const Duration(milliseconds: 100));
                       _scrollController.animateTo(
                         _scrollController.position.maxScrollExtent,
                         duration: const Duration(milliseconds: 300),
