@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:language_partner/chat/chat_screen_manager.dart';
+import 'package:language_partner/service_locator.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -9,6 +11,15 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _controller = TextEditingController();
+  final _scrollController = ScrollController();
+  final manager = getIt<ChatScreenManager>();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +37,22 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Hello'),
-                    ),
+              child: ValueListenableBuilder<List<String>>(
+                valueListenable: manager.messageListNotifier,
+                builder: (context, messages, child) {
+                  return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      final message = messages[index];
+                      return Card(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(message),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -56,7 +74,19 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                   ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.send))
+                  IconButton(
+                    onPressed: () async {
+                      manager.send(_controller.text);
+                      _controller.clear();
+                      await Future.delayed(const Duration(milliseconds: 0));
+                      _scrollController.animateTo(
+                        _scrollController.position.maxScrollExtent,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                      );
+                    },
+                    icon: const Icon(Icons.send),
+                  )
                 ],
               ),
             ),

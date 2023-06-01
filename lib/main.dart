@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:language_partner/chat/chat_screen.dart';
+import 'package:language_partner/service_locator.dart';
 
 void main() {
+  setupServiceLocator();
   runApp(const LanguagePartnerApp());
 }
 
@@ -14,7 +16,7 @@ class LanguagePartnerApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.purple,
+        colorSchemeSeed: Colors.green,
       ),
       home: const ChatScreen(),
     );
