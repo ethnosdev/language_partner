@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:language_partner/chat/chat_screen_manager.dart';
 import 'package:language_partner/service_locator.dart';
 
@@ -40,6 +42,13 @@ class _ChatScreenState extends State<ChatScreen> {
               child: ValueListenableBuilder<List<Message>>(
                 valueListenable: manager.messageListNotifier,
                 builder: (context, messages, child) {
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    _scrollController.animateTo(
+                      _scrollController.position.maxScrollExtent,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                    );
+                  });
                   return ListView.builder(
                     controller: _scrollController,
                     itemCount: messages.length,
@@ -90,16 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () async {
-                      manager.send(_controller.text);
-                      _controller.clear();
-                      await Future.delayed(const Duration(milliseconds: 100));
-                      _scrollController.animateTo(
-                        _scrollController.position.maxScrollExtent,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeOut,
-                      );
-                    },
+                    onPressed: _sendMessage,
                     icon: const Icon(Icons.send),
                   )
                 ],
@@ -109,5 +109,10 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _sendMessage() async {
+    manager.send(_controller.text);
+    _controller.clear();
   }
 }
