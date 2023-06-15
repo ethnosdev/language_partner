@@ -6,18 +6,28 @@ class ChatScreenManager {
   final messageListNotifier = MessageNotifier();
   final chatService = getIt<ChatService>();
 
-  void send(String text) async {
-    messageListNotifier.add(text);
-    final response = await chatService.send(text);
+  void send(String userMessage) async {
+    final message = Message(userMessage, Sender.user);
+    messageListNotifier.add(message);
+    final botResponse = await chatService.send(message.text);
+    final response = Message(botResponse, Sender.bot);
     messageListNotifier.add(response);
   }
 }
 
-class MessageNotifier extends ValueNotifier<List<String>> {
+class MessageNotifier extends ValueNotifier<List<Message>> {
   MessageNotifier() : super([]);
 
-  void add(String listItem) {
-    value.add(listItem);
+  void add(Message message) {
+    value.add(message);
     notifyListeners();
   }
 }
+
+class Message {
+  const Message(this.text, this.sender);
+  final String text;
+  final Sender sender;
+}
+
+enum Sender { user, bot }

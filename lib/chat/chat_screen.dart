@@ -37,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           children: [
             Expanded(
-              child: ValueListenableBuilder<List<String>>(
+              child: ValueListenableBuilder<List<Message>>(
                 valueListenable: manager.messageListNotifier,
                 builder: (context, messages, child) {
                   return ListView.builder(
@@ -45,11 +45,26 @@ class _ChatScreenState extends State<ChatScreen> {
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       final message = messages[index];
-                      return Card(
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(message),
+                      final isUser = message.sender == Sender.user;
+                      return Padding(
+                        padding: (isUser)
+                            ? const EdgeInsets.only(left: 40.0)
+                            : const EdgeInsets.only(right: 40.0),
+                        child: Align(
+                          alignment: (isUser)
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Card(
+                            color: (isUser)
+                                ? Theme.of(context).colorScheme.primaryContainer
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .tertiaryContainer,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SelectableText(message.text),
+                            ),
+                          ),
                         ),
                       );
                     },
