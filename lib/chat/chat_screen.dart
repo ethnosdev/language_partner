@@ -12,13 +12,13 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final _controller = TextEditingController();
+  final _textEditingController = TextEditingController();
   final _scrollController = ScrollController();
   final manager = getIt<ChatScreenManager>();
 
   @override
   void dispose() {
-    _controller.dispose();
+    _textEditingController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -89,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: TextField(
                       minLines: 1,
                       maxLines: 5,
-                      controller: _controller,
+                      controller: _textEditingController,
                       decoration: InputDecoration(
                         hintText: 'Message',
                         filled: true,
@@ -112,7 +112,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _sendMessage() async {
-    manager.send(_controller.text);
-    _controller.clear();
+    manager.send(_textEditingController.text);
+    _textEditingController.clear();
   }
 }
